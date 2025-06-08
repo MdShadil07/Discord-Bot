@@ -1,0 +1,104 @@
+.login-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(145deg, #5865F2, #23272A);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+}
+
+.login-header {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.discord-icon {
+  font-size: 2rem;
+  color: #ffcc00;
+}
+
+.login-card {
+  background-color: #1e1f22;
+  border-radius: 16px;
+  padding: 40px;
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+.discord-logo {
+  width: 80px;
+  margin-bottom: 20px;
+}
+
+.login-btn {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 16px;
+  border: none;
+  background-color: #ffcc00;
+  color: #000;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #e6b800;
+  transform: scale(1.03);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+.login-footer {
+  padding: 15px;
+  font-size: 0.9rem;
+  background-color: #111;
+  color: #ccc;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-btn {
+  background-color: #7289da;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #5b6eae;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

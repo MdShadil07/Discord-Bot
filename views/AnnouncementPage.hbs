@@ -1,0 +1,90 @@
+import React, { useState } from "react";
+
+const AnnouncementPage = ({ userRole = "manager", userName = "Admin" }) => {
+  // announcements state
+  const [announcements, setAnnouncements] = useState([
+    {
+      id: 1,
+      author: "Admin",
+      content: "Welcome to the fund management system!",
+      timestamp: new Date(),
+    },
+  ]);
+
+  const [newAnnouncement, setNewAnnouncement] = useState("");
+
+  // Add new announcement handler
+  const handleAddAnnouncement = () => {
+    if (!newAnnouncement.trim()) return alert("Announcement cannot be empty.");
+
+    const newAnn = {
+      id: Date.now(),
+      author: userName,
+      content: newAnnouncement.trim(),
+      timestamp: new Date(),
+    };
+
+    setAnnouncements((prev) => [newAnn, ...prev]);
+    setNewAnnouncement("");
+  };
+
+  return (
+    <div style={{ maxWidth: 700, margin: "auto", padding: 20 }}>
+      <h2>Announcements</h2>
+
+      {(userRole === "admin" || userRole === "manager") && (
+        <div style={{ marginBottom: 20 }}>
+          <textarea
+            rows={4}
+            placeholder="Write a new announcement..."
+            value={newAnnouncement}
+            onChange={(e) => setNewAnnouncement(e.target.value)}
+            style={{ width: "100%", padding: 10, fontSize: 16 }}
+          />
+          <button
+            onClick={handleAddAnnouncement}
+            style={{ marginTop: 8, padding: "8px 16px", fontSize: 16, cursor: "pointer" }}
+          >
+            Post Announcement
+          </button>
+        </div>
+      )}
+
+      <div>
+        {announcements.length === 0 ? (
+          <p>No announcements yet.</p>
+        ) : (
+          announcements.map((ann) => (
+            <div
+              key={ann.id}
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: 6,
+                padding: 12,
+                marginBottom: 12,
+                backgroundColor: "#f9f9f9",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: "bold",
+                  marginBottom: 6,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>{ann.author}</span>
+                <span style={{ fontSize: 12, color: "#666" }}>
+                  {ann.timestamp.toLocaleString()}
+                </span>
+              </div>
+              <div style={{ whiteSpace: "pre-wrap" }}>{ann.content}</div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AnnouncementPage;

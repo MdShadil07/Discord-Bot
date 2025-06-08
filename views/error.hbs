@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <style>
+    body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+    h1 { color: #ff4d4d; }
+  </style>
+</head>
+<body>
+  <h1>{{message}}</h1>
+  {{#if error}}
+    <p>Error Details: {{error}}</p>
+  {{/if}}
+  <a href="/">Back to Home</a>
+</body>
+</html>

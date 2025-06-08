@@ -1,0 +1,411 @@
+{{!-- views/addMember.hbs --}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add New Member</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome for icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-pV24OgEgfLqO8wvnj1X5gk0H58bN7rNgRkGAl2ZMDY0pVw4kXrwxSmcKD7KU4dv2eIcz6m2ZjRjvA2DFTqVJig=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <style>
+    /* Dark + Yellow theme */
+    body {
+      background-color: #121212;
+      color: #f3ca20;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #ffd93b;
+      text-shadow: 0 0 8px #ffd93b;
+    }
+
+    /* Modal Background */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none; /* hidden by default */
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-bg.active {
+      display: flex;
+    }
+
+    /* Modal Container */
+    .modal {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 30px #f3ca20aa;
+      border: 2px solid #f3ca20;
+      animation: fadeInScale 0.3s ease forwards;
+      position: relative;
+      outline: none;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Removed Close Button (cross) as requested */
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: block;
+      color: #ffd93b;
+      text-shadow: 0 0 4px #ffd93b;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 2px solid #f3ca20;
+      border-radius: 8px;
+      background: #121212;
+      color: #f3ca20;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+      outline-offset: 2px;
+      outline-color: transparent;
+    }
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="number"]:focus {
+      border-color: #ffd93b;
+      outline-color: #ffd93b;
+    }
+
+    button.submit-btn {
+      background: #f3ca20;
+      border: none;
+      padding: 0.75rem 0;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #121212;
+      box-shadow: 0 0 15px #f3ca20;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    button.submit-btn:hover {
+      background: #ffd93b;
+      box-shadow: 0 0 25px #ffd93b;
+    }
+
+    /* Avatar preview */
+    .avatar-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1rem;
+      color: #ffd93b;
+      text-shadow: 0 0 4px #ffd93b;
+    }
+    .avatar-preview img {
+      border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      border: 2px solid #f3ca20;
+      box-shadow: 0 0 15px #f3ca20aa;
+      margin-top: 0.5rem;
+      object-fit: cover;
+    }
+
+    /* Show add member button */
+    #openModalBtn {
+      background: #f3ca20;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #121212;
+      box-shadow: 0 0 15px #f3ca20;
+      transition: background 0.3s, box-shadow 0.3s;
+      margin-bottom: 2rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #openModalBtn:hover {
+      background: #ffd93b;
+      box-shadow: 0 0 25px #ffd93b;
+    }
+
+    /* Alert */
+    .alert-warning {
+      background: #ffcc00aa;
+      padding: 1rem 1.5rem;
+      color: #333;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      max-width: 400px;
+      margin: 2rem auto;
+      box-shadow: 0 0 10px #ffcc0088;
+    }
+  </style>
+</head>
+<body>
+  {{#if isAdmin}}
+  <!-- Button to open modal -->
+  <button id="openModalBtn" aria-haspopup="dialog" aria-controls="addMemberModal" aria-expanded="false">
+    <i class="fa fa-user-plus"></i> Add New Member
+  </button>
+
+  <!-- Modal -->
+  <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+    <div class="modal" id="addMemberModal" role="document">
+      <h2 id="modalTitle"><i class="fa fa-users"></i> Add New Member</h2>
+
+      <form id="addMemberForm" novalidate>
+        <label for="name"><i class="fa fa-id-card"></i> Name*</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter member name"
+          required
+          autocomplete="off"
+          aria-required="true"
+        />
+
+        <label for="cid"><i class="fa fa-hashtag"></i> CID*</label>
+        <input
+          type="text"
+          id="cid"
+          name="cid"
+          placeholder="Enter CID"
+          required
+          autocomplete="off"
+          aria-required="true"
+        />
+
+        <label for="discordId"><i class="fa fa-discord"></i> Discord ID*</label>
+        <input
+          type="text"
+          id="discordId"
+          name="discordId"
+          placeholder="Enter Discord User ID"
+          required
+          autocomplete="off"
+          aria-required="true"
+        />
+
+        <label for="phone"><i class="fa fa-phone"></i> Phone Number*</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="Enter phone number"
+          required
+          autocomplete="off"
+          aria-required="true"
+          pattern="^\+?\d{7,15}$"
+          title="Enter a valid phone number"
+        />
+
+        <label for="initialAmount"><i class="fa fa-dollar-sign"></i> Initial Amount*</label>
+        <input
+          type="number"
+          id="initialAmount"
+          name="initialAmount"
+          min="0"
+          placeholder="Initial amount deposited"
+          required
+          aria-required="true"
+        />
+
+        <label for="weeklyFund"><i class="fa fa-coins"></i> Weekly Fund Amount</label>
+        <input
+          type="number"
+          id="weeklyFund"
+          name="weeklyFund"
+          min="0"
+          placeholder="Weekly fund amount"
+          aria-required="false"
+        />
+
+        <!-- Avatar preview -->
+        <div class="avatar-preview" id="avatarPreview" aria-live="polite" style="display:none;">
+          <span>Profile Picture Preview</span>
+          <img src="" alt="Discord Avatar Preview" />
+        </div>
+
+        <button type="submit" class="submit-btn" aria-label="Add Member">
+          <i class="fa fa-plus-circle"></i> Add Member
+        </button>
+      </form>
+    </div>
+  </div>
+
+  {{else}}
+  <div class="alert-warning" role="alert" aria-live="polite">
+    <i class="fa fa-exclamation-triangle"></i> You do not have permission to add members.
+  </div>
+  {{/if}}
+
+  <script>
+    (function () {
+      const openModalBtn = document.getElementById('openModalBtn');
+      const modalBg = document.getElementById('modalBg');
+      const form = document.getElementById('addMemberForm');
+      const avatarPreviewDiv = document.getElementById('avatarPreview');
+      const avatarImg = avatarPreviewDiv.querySelector('img');
+      const discordIdInput = document.getElementById('discordId');
+
+      // Helper: get Discord avatar URL from user ID (Discord user ID usually numeric)
+      function getDiscordAvatarUrl(id) {
+        if (!id) return null;
+
+        // If ID looks numeric, use default avatar by last digit (safe fallback)
+        if (/^\d+$/.test(id)) {
+          // Discord default avatars have 5 versions (0 to 4)
+          const defaultAvatarIndex = parseInt(id.slice(-1)) % 5;
+          return `https://cdn.discordapp.com/embed/avatars/${defaultAvatarIndex}.png`;
+        }
+        return null;
+      }
+
+      // Open modal
+      openModalBtn && openModalBtn.addEventListener('click', () => {
+        modalBg.classList.add('active');
+        openModalBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+
+        // Focus first input in form
+        setTimeout(() => {
+          form.name.focus();
+        }, 150);
+      });
+
+      // Close modal on clicking outside modal content
+      modalBg.addEventListener('click', (e) => {
+        if (e.target === modalBg) {
+          closeModal();
+        }
+      });
+
+      // Close modal helper
+      function closeModal() {
+        modalBg.classList.remove('active');
+        openModalBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = 'auto';
+        resetForm();
+        openModalBtn.focus();
+      }
+
+      // Reset form & avatar preview
+      function resetForm() {
+        form.reset();
+        avatarPreviewDiv.style.display = 'none';
+        avatarImg.src = '';
+      }
+
+      // Update avatar preview when Discord ID changes
+      discordIdInput.addEventListener('input', () => {
+        const id = discordIdInput.value.trim();
+        if (id) {
+          const avatarUrl = getDiscordAvatarUrl(id);
+          if (avatarUrl) {
+            avatarImg.src = avatarUrl;
+            avatarPreviewDiv.style.display = 'flex';
+          } else {
+            avatarPreviewDiv.style.display = 'none';
+            avatarImg.src = '';
+          }
+        } else {
+          avatarPreviewDiv.style.display = 'none';
+          avatarImg.src = '';
+        }
+      });
+
+      // Form submission handler
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Validate required fields manually for better UX
+        const requiredFields = ['name', 'cid', 'discordId', 'phone', 'initialAmount'];
+        for (const field of requiredFields) {
+          const input = form[field];
+          if (!input.value.trim()) {
+            alert(`Please fill in the ${input.name} field.`);
+            input.focus();
+            return;
+          }
+          // For phone, basic pattern check
+          if (field === 'phone' && !/^\+?\d{7,15}$/.test(input.value.trim())) {
+            alert('Please enter a valid phone number (7-15 digits, optional +).');
+            input.focus();
+            return;
+          }
+        }
+
+        // Prepare member data
+        const newMember = {
+          name: form.name.value.trim(),
+          cid: form.cid.value.trim(),
+          discordId: form.discordId.value.trim(),
+          phone: form.phone.value.trim(),
+          initialAmount: Number(form.initialAmount.value.trim()),
+          weeklyFund: Number(form.weeklyFund.value.trim()) || 0,
+          avatarUrl: getDiscordAvatarUrl(form.discordId.value.trim()),
+        };
+
+        // TODO: send this data to your backend via fetch or other method
+        console.log('New member to add:', newMember);
+
+        alert(`Member "${newMember.name}" added successfully!`);
+
+        closeModal();
+
+        // Optionally: trigger callback to refresh members list if you have one
+      });
+    })();
+  </script>
+</body>
+</html>

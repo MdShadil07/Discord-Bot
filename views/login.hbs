@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VAGOS Discord Login</title>
+  <!-- Your custom CSS -->
+ <link href="/LoginPage.css" rel="stylesheet" />
+
+  <!-- FontAwesome CDN for Discord icon -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <div class="login-container">
+    <header class="login-header">
+      <i class="fab fa-discord discord-icon" style="font-size:40px; color:#7289da;"></i>
+      <h1>VAGOS Discord Login</h1>
+    </header>
+
+    <div class="login-card">
+      <img
+        src="https://cdn.worldvectorlogo.com/logos/discord-6.svg"
+        alt="Discord Logo"
+        class="discord-logo"
+        style="width:100px; margin-bottom:20px;"
+      />
+      <h2>Welcome to VAGOS Panel</h2>
+      <p>Please login with your Discord account to continue.</p>
+
+      <form action="/auth/discord" method="GET">
+        <button type="submit" class="login-btn">
+          <i class="fab fa-discord btn-icon" style="margin-right: 8px;"></i>
+          Login via Discord
+        </button>
+      </form>
+    </div>
+
+    <footer class="login-footer">
+      <p>&copy; 2025 VAGOS Gang Panel. All rights reserved.</p>
+      <p>More information and links coming soon...</p>
+    </footer>
+  </div>
+
+  <!-- Optional: Add JS if needed -->
+</body>
+</html>
