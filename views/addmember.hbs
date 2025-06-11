@@ -1,411 +1,419 @@
-{{!-- views/addMember.hbs --}}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Add New Member</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
-
-  <!-- Font Awesome for icons -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-pV24OgEgfLqO8wvnj1X5gk0H58bN7rNgRkGAl2ZMDY0pVw4kXrwxSmcKD7KU4dv2eIcz6m2ZjRjvA2DFTqVJig=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-
+  <title>Coin2Flow - Add Member</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* Dark + Yellow theme */
     body {
-      background-color: #121212;
-      color: #f3ca20;
-      font-family: 'Poppins', sans-serif;
       margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      font-family: 'Poppins', sans-serif;
+      background: #121212;
+      color: #e0e0e0;
+    }
+
+    .outer-wrapper {
+      max-width: 1300px;
+      margin: auto;
       padding: 2rem;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: #ffd93b;
-      text-shadow: 0 0 8px #ffd93b;
-    }
-
-    /* Modal Background */
-    .modal-bg {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      display: none; /* hidden by default */
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-    .modal-bg.active {
+    header {
+      background-color: #1f1f1f;
+      padding: 1rem 2rem;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      border-bottom: 2px solid #f3ca20;
     }
 
-    /* Modal Container */
-    .modal {
-      background: #1e1e1e;
-      border-radius: 12px;
-      padding: 2rem 3rem;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 0 30px #f3ca20aa;
-      border: 2px solid #f3ca20;
-      animation: fadeInScale 0.3s ease forwards;
-      position: relative;
-      outline: none;
+    header h1 {
+      color: #f3ca20;
+      font-size: 1.8rem;
     }
 
-    @keyframes fadeInScale {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+    nav a {
+      color: #ccc;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
     }
 
-    /* Removed Close Button (cross) as requested */
+    nav a:hover {
+      color: #f3ca20;
+    }
+
+    .form-section, .members-section {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .form-section h2, .members-section h2 {
+      color: #f3ca20;
+      margin-bottom: 1rem;
+    }
 
     form {
       display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: space-between;
+    }
+
+    form label {
+      width: 100%;
+      font-weight: 600;
+    }
+
+    form input {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #555;
+      border-radius: 5px;
+      background: #181818;
+      color: white;
+    }
+
+    form > * {
+      flex: 1 1 calc(50% - 1rem);
+      min-width: 220px;
+    }
+
+    .submit-btn {
+      flex: 1 1 100%;
+      padding: 0.8rem;
+      background: #f3ca20;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #121212;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+      background: #ffd93b;
+    }
+
+    .member-block {
+      display: flex;
       flex-direction: column;
+      background: #292929;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .member-header {
+      display: flex;
+      align-items: center;
       gap: 1rem;
     }
 
-    label {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      display: block;
-      color: #ffd93b;
-      text-shadow: 0 0 4px #ffd93b;
-    }
-
-    input[type="text"],
-    input[type="tel"],
-    input[type="number"] {
-      width: 100%;
-      padding: 0.6rem 0.8rem;
-      border: 2px solid #f3ca20;
-      border-radius: 8px;
-      background: #121212;
-      color: #f3ca20;
-      font-size: 1rem;
-      transition: border-color 0.3s;
-      outline-offset: 2px;
-      outline-color: transparent;
-    }
-    input[type="text"]:focus,
-    input[type="tel"]:focus,
-    input[type="number"]:focus {
-      border-color: #ffd93b;
-      outline-color: #ffd93b;
-    }
-
-    button.submit-btn {
-      background: #f3ca20;
-      border: none;
-      padding: 0.75rem 0;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      color: #121212;
-      box-shadow: 0 0 15px #f3ca20;
-      transition: background 0.3s, box-shadow 0.3s;
-    }
-    button.submit-btn:hover {
-      background: #ffd93b;
-      box-shadow: 0 0 25px #ffd93b;
-    }
-
-    /* Avatar preview */
-    .avatar-preview {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 1rem;
-      color: #ffd93b;
-      text-shadow: 0 0 4px #ffd93b;
-    }
-    .avatar-preview img {
+    .member-header img {
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
-      width: 90px;
-      height: 90px;
-      border: 2px solid #f3ca20;
-      box-shadow: 0 0 15px #f3ca20aa;
-      margin-top: 0.5rem;
       object-fit: cover;
     }
 
-    /* Show add member button */
-    #openModalBtn {
-      background: #f3ca20;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      color: #121212;
-      box-shadow: 0 0 15px #f3ca20;
-      transition: background 0.3s, box-shadow 0.3s;
-      margin-bottom: 2rem;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #openModalBtn:hover {
-      background: #ffd93b;
-      box-shadow: 0 0 25px #ffd93b;
+    .member-info {
+      flex-grow: 1;
     }
 
-    /* Alert */
-    .alert-warning {
-      background: #ffcc00aa;
-      padding: 1rem 1.5rem;
-      color: #333;
-      border-radius: 8px;
-      font-weight: 600;
+    .member-info h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .member-info p {
+      margin: 0.3rem 0;
+      color: #ccc;
+    }
+
+    .toggle-weeks {
+      margin-top: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #6cc6f0;
+    }
+
+    .week-payments {
+      display: none;
+      margin-top: 1rem;
+      padding-left: 1rem;
+      border-left: 2px solid #f3ca20;
+    }
+
+    .member-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+
+    .member-actions button {
+      margin-right: 10px;
+      padding: 0.4rem 1rem;
+      background-color: #3a3a3a;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .member-actions .edit-btn {
+      background-color: #2f80ed;
+    }
+
+    .member-actions .delete-btn {
+      background-color: #e74c3c;
+    }
+
+    .member-actions button:hover {
+      opacity: 0.9;
+    }
+
+    .search-box {
+      margin-bottom: 1rem;
+      text-align: right;
+    }
+
+    .search-box input {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #121212;
+      color: #fff;
+    }
+
+    .pagination {
       text-align: center;
-      max-width: 400px;
-      margin: 2rem auto;
-      box-shadow: 0 0 10px #ffcc0088;
+      margin-top: 1rem;
+    }
+
+    .pagination button {
+      margin: 0 5px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      background: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background: #f3ca20;
+      color: #121212;
+    }
+
+    #preview-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  {{#if isAdmin}}
-  <!-- Button to open modal -->
-  <button id="openModalBtn" aria-haspopup="dialog" aria-controls="addMemberModal" aria-expanded="false">
-    <i class="fa fa-user-plus"></i> Add New Member
-  </button>
+  <header>
+    <h1><i class="fa-solid fa-building-columns"></i> Coin2Flow</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/add-member">Add Member</a>
+      <a href="/manage-funds">Manage Funds</a>
+    </nav>
+  </header>
 
-  <!-- Modal -->
-  <div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
-    <div class="modal" id="addMemberModal" role="document">
-      <h2 id="modalTitle"><i class="fa fa-users"></i> Add New Member</h2>
+  <div class="outer-wrapper">
+    <div class="form-section">
+      <h2>Add New Member</h2>
+      <form id="memberForm" action="/add-member" method="POST" enctype="multipart/form-data">
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Full Name" required />
 
-      <form id="addMemberForm" novalidate>
-        <label for="name"><i class="fa fa-id-card"></i> Name*</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Enter member name"
-          required
-          autocomplete="off"
-          aria-required="true"
-        />
+        <label>CID</label>
+        <input type="text" name="cid" placeholder="City ID" required />
 
-        <label for="cid"><i class="fa fa-hashtag"></i> CID*</label>
-        <input
-          type="text"
-          id="cid"
-          name="cid"
-          placeholder="Enter CID"
-          required
-          autocomplete="off"
-          aria-required="true"
-        />
+        <label>Discord ID</label>
+        <input type="text" name="discordId" placeholder="123456789" required />
 
-        <label for="discordId"><i class="fa fa-discord"></i> Discord ID*</label>
-        <input
-          type="text"
-          id="discordId"
-          name="discordId"
-          placeholder="Enter Discord User ID"
-          required
-          autocomplete="off"
-          aria-required="true"
-        />
+        <label>Phone</label>
+        <input type="tel" name="phone" placeholder="e.g., 9876543210" required />
 
-        <label for="phone"><i class="fa fa-phone"></i> Phone Number*</label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          placeholder="Enter phone number"
-          required
-          autocomplete="off"
-          aria-required="true"
-          pattern="^\+?\d{7,15}$"
-          title="Enter a valid phone number"
-        />
+        <label>Initial Deposit</label>
+        <input type="number" name="initialAmount" placeholder="₹ 5000" required />
 
-        <label for="initialAmount"><i class="fa fa-dollar-sign"></i> Initial Amount*</label>
-        <input
-          type="number"
-          id="initialAmount"
-          name="initialAmount"
-          min="0"
-          placeholder="Initial amount deposited"
-          required
-          aria-required="true"
-        />
+        <label>Weekly Fund</label>
+        <input type="number" name="weeklyFund" placeholder="₹ 500" required />
 
-        <label for="weeklyFund"><i class="fa fa-coins"></i> Weekly Fund Amount</label>
-        <input
-          type="number"
-          id="weeklyFund"
-          name="weeklyFund"
-          min="0"
-          placeholder="Weekly fund amount"
-          aria-required="false"
-        />
+        <label>Profile Picture</label>
+        <input type="file" name="avatar" accept="image/*" onchange="previewAvatar(event)" />
+        <img id="preview-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Preview" />
 
-        <!-- Avatar preview -->
-        <div class="avatar-preview" id="avatarPreview" aria-live="polite" style="display:none;">
-          <span>Profile Picture Preview</span>
-          <img src="" alt="Discord Avatar Preview" />
-        </div>
-
-        <button type="submit" class="submit-btn" aria-label="Add Member">
-          <i class="fa fa-plus-circle"></i> Add Member
-        </button>
+        <button type="submit" class="submit-btn">Add Member</button>
       </form>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search members..." />
+    </div>
+
+    <div class="members-section">
+      <h2>Members</h2>
+      <div id="membersContainer"></div>
+      <div class="pagination" id="paginationBar"></div>
     </div>
   </div>
 
-  {{else}}
-  <div class="alert-warning" role="alert" aria-live="polite">
-    <i class="fa fa-exclamation-triangle"></i> You do not have permission to add members.
-  </div>
-  {{/if}}
-
   <script>
-    (function () {
-      const openModalBtn = document.getElementById('openModalBtn');
-      const modalBg = document.getElementById('modalBg');
-      const form = document.getElementById('addMemberForm');
-      const avatarPreviewDiv = document.getElementById('avatarPreview');
-      const avatarImg = avatarPreviewDiv.querySelector('img');
-      const discordIdInput = document.getElementById('discordId');
+    const membersContainer = document.getElementById('membersContainer');
+    const searchInput = document.getElementById('searchInput');
+    const paginationBar = document.getElementById('paginationBar');
+    let currentPage = 1;
+    const membersPerPage = 5;
+    let allMembers = [];
 
-      // Helper: get Discord avatar URL from user ID (Discord user ID usually numeric)
-      function getDiscordAvatarUrl(id) {
-        if (!id) return null;
+    async function fetchMembers() {
+      const res = await fetch('/get-summary');
+      const data = await res.json();
+      allMembers = data;
+      renderMembers();
+    }
 
-        // If ID looks numeric, use default avatar by last digit (safe fallback)
-        if (/^\d+$/.test(id)) {
-          // Discord default avatars have 5 versions (0 to 4)
-          const defaultAvatarIndex = parseInt(id.slice(-1)) % 5;
-          return `https://cdn.discordapp.com/embed/avatars/${defaultAvatarIndex}.png`;
-        }
-        return null;
-      }
+    function renderMembers() {
+      membersContainer.innerHTML = '';
+      const searchTerm = searchInput.value.toLowerCase();
+      const filtered = allMembers.filter(m =>
+        m.name.toLowerCase().includes(searchTerm) ||
+        m.cid.toLowerCase().includes(searchTerm) ||
+        m.phone.includes(searchTerm)
+      );
 
-      // Open modal
-      openModalBtn && openModalBtn.addEventListener('click', () => {
-        modalBg.classList.add('active');
-        openModalBtn.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden';
+      const start = (currentPage - 1) * membersPerPage;
+      const end = start + membersPerPage;
+      const paginated = filtered.slice(start, end);
 
-        // Focus first input in form
-        setTimeout(() => {
-          form.name.focus();
-        }, 150);
+      paginated.forEach(member => {
+        const div = document.createElement('div');
+        div.className = 'member-block';
+       div.innerHTML = `
+  <div class="member-header">
+    <img src="${member.avatarUrl || 'https://cdn.discordapp.com/embed/avatars/0.png'}" alt="Avatar" />
+    <div class="member-info">
+      <h3><i class="fa-solid fa-user"></i> ${member.name} (${member.cid})</h3>
+      <p><i class="fa-solid fa-phone"></i> ${member.phone}</p>
+      <p><i class="fa-brands fa-discord"></i> ${member.discordId || '<span style="color:red">Null</span>'}</p>
+      <p><i class="fa-solid fa-coins"></i> Initial: ₹${member.initialAmount}, Weekly: ₹${member.weeklyFund}</p>
+      <span class="toggle-weeks" onclick="toggleWeeks(this)" data-discord-id="${member.discordId}">+ Show Weekly Payments</span>
+      <div class="week-payments"></div>
+    </div>
+  </div>
+  <div class="member-actions">
+    <button class="edit-btn" onclick="window.location.href='/edit-member/${member.id}'">Edit</button>
+    <button class="delete-btn" onclick="deleteMember(${member.id})">Delete</button>
+  </div>
+`;
+
+        membersContainer.appendChild(div);
       });
 
-      // Close modal on clicking outside modal content
-      modalBg.addEventListener('click', (e) => {
-        if (e.target === modalBg) {
-          closeModal();
+      renderPagination(filtered.length);
+    }
+
+    function renderPagination(total) {
+      paginationBar.innerHTML = '';
+      const pages = Math.ceil(total / membersPerPage);
+
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = 'Prev';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderMembers();
         }
-      });
+      };
+      paginationBar.appendChild(prevBtn);
 
-      // Close modal helper
-      function closeModal() {
-        modalBg.classList.remove('active');
-        openModalBtn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = 'auto';
-        resetForm();
-        openModalBtn.focus();
-      }
-
-      // Reset form & avatar preview
-      function resetForm() {
-        form.reset();
-        avatarPreviewDiv.style.display = 'none';
-        avatarImg.src = '';
-      }
-
-      // Update avatar preview when Discord ID changes
-      discordIdInput.addEventListener('input', () => {
-        const id = discordIdInput.value.trim();
-        if (id) {
-          const avatarUrl = getDiscordAvatarUrl(id);
-          if (avatarUrl) {
-            avatarImg.src = avatarUrl;
-            avatarPreviewDiv.style.display = 'flex';
-          } else {
-            avatarPreviewDiv.style.display = 'none';
-            avatarImg.src = '';
-          }
-        } else {
-          avatarPreviewDiv.style.display = 'none';
-          avatarImg.src = '';
-        }
-      });
-
-      // Form submission handler
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // Validate required fields manually for better UX
-        const requiredFields = ['name', 'cid', 'discordId', 'phone', 'initialAmount'];
-        for (const field of requiredFields) {
-          const input = form[field];
-          if (!input.value.trim()) {
-            alert(`Please fill in the ${input.name} field.`);
-            input.focus();
-            return;
-          }
-          // For phone, basic pattern check
-          if (field === 'phone' && !/^\+?\d{7,15}$/.test(input.value.trim())) {
-            alert('Please enter a valid phone number (7-15 digits, optional +).');
-            input.focus();
-            return;
-          }
-        }
-
-        // Prepare member data
-        const newMember = {
-          name: form.name.value.trim(),
-          cid: form.cid.value.trim(),
-          discordId: form.discordId.value.trim(),
-          phone: form.phone.value.trim(),
-          initialAmount: Number(form.initialAmount.value.trim()),
-          weeklyFund: Number(form.weeklyFund.value.trim()) || 0,
-          avatarUrl: getDiscordAvatarUrl(form.discordId.value.trim()),
+      for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = i === currentPage ? 'active' : '';
+        btn.onclick = () => {
+          currentPage = i;
+          renderMembers();
         };
+        paginationBar.appendChild(btn);
+      }
 
-        // TODO: send this data to your backend via fetch or other method
-        console.log('New member to add:', newMember);
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = 'Next';
+      nextBtn.disabled = currentPage === pages;
+      nextBtn.onclick = () => {
+        if (currentPage < pages) {
+          currentPage++;
+          renderMembers();
+        }
+      };
+      paginationBar.appendChild(nextBtn);
+    }
 
-        alert(`Member "${newMember.name}" added successfully!`);
+    function previewAvatar(event) {
+      const file = event.target.files[0];
+      if (file) {
+        document.getElementById('preview-avatar').src = URL.createObjectURL(file);
+      }
+    }
 
-        closeModal();
+    async function deleteMember(id) {
+      if (!confirm("Delete this member?")) return;
+      const res = await fetch(`/delete-member/${id}`, { method: 'DELETE' });
+      const result = await res.json();
+      if (result.success) fetchMembers();
+      else alert("Error deleting member.");
+    }
 
-        // Optionally: trigger callback to refresh members list if you have one
-      });
-    })();
+  async function toggleWeeks(el) {
+  const discordId = el.getAttribute("data-discord-id");
+  const container = el.nextElementSibling;
+
+  if (container.style.display === 'block') {
+    container.style.display = 'none';
+    el.innerText = '+ Show Weekly Payments';
+  } else {
+    // Fetch weekly payment data from backend
+    try {
+      const res = await fetch(`/get-weekly-payments/${discordId}`);
+      const data = await res.json();
+
+      if (data && data.length > 0) {
+        container.innerHTML = data.map(entry => `
+          <p><strong>${entry.weekNumber}:</strong> ₹${entry.weekAmount}</p>
+        `).join('');
+      } else {
+        container.innerHTML = '<p style="color: gray;">No weekly payments available.</p>';
+      }
+
+      container.style.display = 'block';
+      el.innerText = '- Hide Weekly Payments';
+    } catch (err) {
+      console.error("Error fetching weekly payments:", err);
+      container.innerHTML = '<p style="color: red;">Failed to load payments.</p>';
+      container.style.display = 'block';
+    }
+  }
+}
+
+
+    fetchMembers();
   </script>
 </body>
 </html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coin2Flow - Edit Member</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #121212;
+      color: #e0e0e0;
+    }
+
+    .outer-wrapper {
+      max-width: 1000px;
+      margin: auto;
+      padding: 2rem;
+    }
+
+    header {
+      background-color: #1f1f1f;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      border-bottom: 2px solid #f3ca20;
+    }
+
+    header h1 {
+      color: #f3ca20;
+      font-size: 1.8rem;
+    }
+
+    nav a {
+      color: #ccc;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    nav a:hover {
+      color: #f3ca20;
+    }
+
+    .form-section {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .form-section h2 {
+      color: #f3ca20;
+      margin-bottom: 1rem;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    form label {
+      font-weight: 600;
+    }
+
+    form input {
+      padding: 0.6rem;
+      border: 1px solid #555;
+      border-radius: 5px;
+      background: #181818;
+      color: white;
+    }
+
+    .submit-btn {
+      grid-column: span 2;
+      padding: 0.8rem;
+      background: #f3ca20;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #121212;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: #ffd93b;
+    }
+
+    #preview-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fa-solid fa-building-columns"></i> Coin2Flow</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/add-member">Add Member</a>
+      <a href="/manage-funds">Manage Funds</a>
+    </nav>
+  </header>
+
+  <div class="outer-wrapper">
+    <div class="form-section">
+      <h2>Edit Member Details</h2>
+      <form action="/edit-member/{{member.id}}" method="POST" enctype="multipart/form-data">
+        <label>Name</label>
+        <input type="text" name="name" value="{{member.name}}" required />
+
+        <label>CID</label>
+        <input type="text" name="cid" value="{{member.cid}}" required />
+
+        <label>Discord ID</label>
+        <input type="text" name="discordId" value="{{member.discordId}}" required />
+
+        <label>Phone</label>
+        <input type="tel" name="phone" value="{{member.phone}}" required />
+
+        <label>Initial Deposit</label>
+        <input type="number" name="initialAmount" value="{{member.initialAmount}}" required />
+
+        <label>Weekly Fund</label>
+        <input type="number" name="weeklyFund" value="{{member.weeklyFund}}" required />
+
+        <label>Profile Picture</label>
+        <input type="file" name="avatar" accept="image/*" onchange="previewAvatar(event)" />
+        <img id="preview-avatar" src="{{member.avatarUrl}}" alt="Preview" />
+
+        <button type="submit" class="submit-btn">Update Member</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function previewAvatar(event) {
+      const file = event.target.files[0];
+      if (file) {
+        document.getElementById('preview-avatar').src = URL.createObjectURL(file);
+      }
+    }
+  </script>
+</body>
+</html>

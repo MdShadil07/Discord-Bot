@@ -2,24 +2,31 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
-require('./passport'); // 👈 Load strategy here
+require('./passport'); // Load Passport config
 
-// Discord Login
+// =====================================
+// 🔐 Discord OAuth Login & Callback
+// =====================================
+
+// Step 1: Redirect to Discord for login
 router.get('/auth/discord', passport.authenticate('discord'));
 
-// Discord Callback
+// Step 2: Callback after login
 router.get('/auth/discord/callback',
   passport.authenticate('discord', { failureRedirect: '/auth/failed' }),
   (req, res) => {
-    // ✅ Optional: redirect based on role
-    const role = req.user?.role || "vagos";
-    if (role === "admin") return res.redirect("/addmembers");
-    if (role === "manager") return res.redirect("/manageFund");
-    res.redirect("/dashboard"); // default
+    console.log("🔑 User after authentication:", req.user);
+    const role = req.user?.app_role || "vagos";
+    console.log("User role:", role);
+
+    // ✅ Redirect all roles to dashboard — control access from there
+    res.redirect("/dashboard");
   }
 );
 
-// Logout
+// =====================================
+// 🚪 Logout
+// =====================================
 router.get('/logout', (req, res, next) => {
   req.logout(err => {
     if (err) return next(err);
@@ -27,9 +34,9 @@ router.get('/logout', (req, res, next) => {
   });
 });
 
-
-
-// Current Logged In User
+// =====================================
+// 👤 Authenticated User Info
+// =====================================
 router.get('/user', (req, res) => {
   if (req.isAuthenticated()) {
     res.json(req.user);

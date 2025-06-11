@@ -1,6 +1,6 @@
 require("dotenv").config();
 require("./auth/passport");
-
+const db = require("./config/db")
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
@@ -15,24 +15,29 @@ const app = express();
 // MIDDLEWARES
 // ==============
 
+// CORS setup: allow your frontend to send cookies
 app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true
+  origin: "http://localhost:3000",  // your frontend origin
+  credentials: true                 // allow cookies to be sent
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 
+// Session config for local development
 app.use(session({
   secret: process.env.SESSION_SECRET || "supersecret",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
-    maxAge: 24 * 60 * 60 * 1000 // 1 day
+    secure: false,  // false for HTTP localhost; true if HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    sameSite: "lax" // adjust if needed for cross-site
   }
 }));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -54,7 +59,7 @@ const hbs = exphbs.create({
   helpers: {
     eq: (a, b) => a === b,
     or: function (...args) {
-      args.pop(); // Remove Handlebars options object
+      args.pop();
       return args.some(Boolean);
     },
     and: function (...args) {
@@ -73,11 +78,18 @@ app.set("views", path.join(__dirname, "views"));
 // ROUTES
 // ==============
 
+const userRoutes = require('./auth/userRoutes');
+app.use('/', userRoutes); // Or use a prefix like '/api'
+
+
 const mainRoutes = require("./routes/routes");
 const authRoutes = require("./auth/authRoutes");
 
 app.use("/", mainRoutes);
 app.use("/", authRoutes);
+
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ==============
 // API ENDPOINTS

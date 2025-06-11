@@ -201,7 +201,8 @@
         localStorage.setItem("loggedUser", JSON.stringify(user));
 
         // Update navbar profile
-        document.querySelector(".profile-avatar").src = user.avatar || "https://cdn.discordapp.com/embed/avatars/0.png";
+       document.querySelector(".profile-avatar").src = user.profile_pic || "https://cdn.discordapp.com/embed/avatars/0.png";
+
         document.getElementById("usernameDisplay").textContent = `${user.username}#${user.discriminator || "0"}`;
 
         // Build sidebar links

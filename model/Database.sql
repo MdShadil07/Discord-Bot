@@ -42,3 +42,48 @@ CREATE TABLE announcements (
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+-- Drop existing if needed
+DROP TABLE IF EXISTS weeklyPayments;
+DROP TABLE IF EXISTS loggedUser;
+
+-- User table
+CREATE TABLE loggedUser (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    cid VARCHAR(50) UNIQUE,
+    phone VARCHAR(20),
+    discordId VARCHAR(100),
+    avatarUrl TEXT,
+    initialAmount DECIMAL(10, 2),
+    weeklyFund DECIMAL(10, 2)
+);
+
+-- Weekly payments table
+CREATE TABLE weeklyPayments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT,
+    weekNumber INT,
+    paidAmount DECIMAL(10, 2),
+    FOREIGN KEY (userId) REFERENCES loggedUser(id)
+);
+
+-- View for real-time calculated dues and total deposits
+CREATE OR REPLACE VIEW user_fund_summary AS
+SELECT 
+    u.id AS userId,
+    u.name,
+    u.cid,
+    u.phone,
+    u.discordId,
+    u.avatarUrl,
+    u.initialAmount,
+    u.weeklyFund,
+    COUNT(w.id) AS totalWeeks,
+    COALESCE(SUM(w.paidAmount), 0) AS totalDeposits,
+    (COUNT(w.id) * u.weeklyFund - COALESCE(SUM(w.paidAmount), 0)) AS totalDue
+FROM loggedUser u
+LEFT JOIN weeklyPayments w ON u.id = w.userId
+GROUP BY u.id;
